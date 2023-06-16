@@ -1,9 +1,8 @@
-package com.security.web.rest;
+package com.security.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.security.security.JwtTokenProvider;
-import com.security.web.rest.vm.LoginVM;
-import lombok.RequiredArgsConstructor;
+import com.security.controller.vm.LoginVM;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +16,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserJwtController {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+
+    public UserJwtController(AuthenticationManagerBuilder authenticationManagerBuilder, JwtTokenProvider jwtTokenProvider) {
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
     @PostMapping("/authenticate")
     public ResponseEntity<JwtToken> authorize(@RequestBody LoginVM loginVM) {
