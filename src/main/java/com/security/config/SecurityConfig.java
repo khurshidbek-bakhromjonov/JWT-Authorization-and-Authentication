@@ -2,7 +2,6 @@ package com.security.config;
 
 import com.security.security.JwtConfigurer;
 import com.security.security.JwtTokenProvider;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,10 +13,14 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
 
     @Bean
     public PasswordEncoder encoder() {
@@ -47,4 +50,5 @@ public class SecurityConfig {
     private JwtConfigurer configurer() {
         return new JwtConfigurer(jwtTokenProvider);
     }
+
 }

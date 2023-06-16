@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
-
+    private static final String AUTHORITIES_KEY = "auth";
     private final long jwtTokenValidateMillisecondRemember;
     private final long jwtTokenValidateMilliseconds;
 
@@ -38,7 +38,7 @@ public class JwtTokenProvider {
 
     public JwtTokenProvider() {
         byte[] keyByte;
-        String secret = "amF2YWhvbGlj";
+        String secret = "jEcHf0ezTD9YxvjPUP7MWdGs4EE6x4GrgHVwh+6wgLUUpOv6exXNYEVgV4mY0Sft4PJxdvv7gRuL5fGyLPrn4w==";
         keyByte = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(keyByte);
         jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
@@ -58,7 +58,7 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim("auth", authorities)
+                .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validate)
                 .compact();
@@ -67,7 +67,7 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String jwt) {
         Claims claims = jwtParser.parseClaimsJwt(jwt).getBody();
         Collection<? extends GrantedAuthority> authorities = Arrays
-                .stream(claims.get("auth").toString().split(","))
+                .stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                 .filter(auth -> !auth.trim().isEmpty())
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
@@ -81,14 +81,19 @@ public class JwtTokenProvider {
             return true;
         } catch (ExpiredJwtException e) {
             logger.error("ExpiredJwtException");
+            e.printStackTrace();
         } catch (UnsupportedJwtException e) {
             logger.error("UnsupportedJwtException");
+            e.printStackTrace();
         } catch (MalformedJwtException e) {
             logger.error("MalformedJwtException");
+            e.printStackTrace();
         } catch (SignatureException e) {
             logger.error("SignatureException");
+            e.printStackTrace();
         } catch (IllegalArgumentException e) {
             logger.error("IllegalArgumentException");
+            e.printStackTrace();
         }
 
         return false;
