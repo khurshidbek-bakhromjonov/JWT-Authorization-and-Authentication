@@ -65,7 +65,7 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String jwt) {
-        Claims claims = jwtParser.parseClaimsJwt(jwt).getBody();
+        Claims claims = jwtParser.parseClaimsJws(jwt).getBody();
         Collection<? extends GrantedAuthority> authorities = Arrays
                 .stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                 .filter(auth -> !auth.trim().isEmpty())
@@ -77,7 +77,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String jwt) {
         try {
-            jwtParser.parseClaimsJwt(jwt);
+            jwtParser.parseClaimsJws(jwt);
             return true;
         } catch (ExpiredJwtException e) {
             logger.error("ExpiredJwtException");
