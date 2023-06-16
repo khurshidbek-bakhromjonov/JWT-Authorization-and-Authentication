@@ -1,10 +1,5 @@
 package com.security.controller.vm;
 
-//import lombok.Getter;
-//import lombok.Setter;
-
-//@Getter
-//@Setter
 public class LoginVM {
 
     private String username;
